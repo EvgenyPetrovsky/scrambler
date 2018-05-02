@@ -49,11 +49,11 @@ loadRules <- function(file) {
   csv.data <- subset(
     read.csv(file, colClasses = "character"),
     subset = TRUE,
-    select = c("Table", "Column", "Method", "Fixed.Value", "Max.Length")
+    select = c("File", "Column", "Method", "Fixed.Value", "Max.Length")
   )
   rules <- Reduce(
     f = function(t, c) {t[,c] <- toupper(t[,c]); t},
-    x = c("Table", "Column"),
+    x = c("File", "Column"),
     init = csv.data
   )
 }

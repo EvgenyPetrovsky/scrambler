@@ -5,27 +5,25 @@
 #'
 #' @export
 #' @param data - dataframe with data to be scrambles
-#' @param tablename - tablename (reference to table in scrambling rules)
 #' @param seed - seed value for randomization
-#' @param scrambling.rules - scrambling rules
-scrambleDataFrame <- function(data, tablename, seed = 100, scrambling.rules) {
-  rules <- subset(scrambling.rules, Table == tablename)
-  cols  <- colnames(data)
-  cols  <- cols[cols %in% rules$Column]
+#' @param scrambling.rules - scrambling rules dataframe that contains Column, Method, Fixed.Value, Max.Lenght columns
+scrambleDataFrame <- function(data, seed = 100, scrambling.rules) {
+  rules <- subset(scrambling.rules, Column %in% colnames(data))
 
-  updateCol <- function(data, col) {
-    rule <- subset(rules, Column == col)
-    method <- tolower(rule$Method[1])
-    fix.val <- rule$Fixed.Value[1]
-    max.len <- rule$Max.Length[1]
+  applyRule <- function(data, idx) {
+    rule    <- rules[idx,]
+    col     <- rule$Column
+    method  <- tolower(rule$Method)
+    fix.val <- rule$Fixed.Value
+    max.len <- rule$Max.Length
 
     write.log("scrambling", col, "using", method, "method")
-    data[, col] <- scrambleValue(data[, col], method, seed, fix.val, max.len)
+    data[, c(col)] <- scrambleValue(data[, col], method, seed, fix.val, max.len)
 
     return(data)
   }
 
-  scdata <- Reduce(f = updateCol, x = cols, init = data)
+  scdata <- Reduce(f = applyRule, x = (1:nrow(rules)), init = data)
 }
 
 #' Scramble values
@@ -38,12 +36,13 @@ scrambleDataFrame <- function(data, tablename, seed = 100, scrambling.rules) {
 #' @param seed - seed value for random generation and sampling
 #' @param new.value - fixed value to replace original one (works only with \code{fixed.value} method)
 #' @param max.len - maximum length of scrabled value (useful when data column is of limited length)
-scrambleValue <- function(value, method, seed = 100, new.value = "", max.len) {
+scrambleValue <- function(value, method, seed = 100, new.value = "", max.len = "") {
   set.seed(seed)
-  if (method == "shuffle") {
+  result <- if (method == "shuffle") {
     shuffle(value)
   } else if (method == "hash") {
-    hash(value, max.len)
+    if (max.len == "") hash(value)
+    else hash(value, as.numeric(max.len))
   } else if (method == "random.hash") {
     random.hash(max.len)
   } else if (method == "random.num") {
@@ -57,6 +56,7 @@ scrambleValue <- function(value, method, seed = 100, new.value = "", max.len) {
   } else {
     fixed.value(value, new.value)
   }
+  result
 }
 
 shuffle <- function (v) {
@@ -64,9 +64,10 @@ shuffle <- function (v) {
 }
 
 hash <- function(v, max.len = 1000000L) {
-  h <- sapply(X = v,
-              FUN = digest::digest, algo = "md5",
-              USE.NAMES = F)
+  hashfun <- function(x) {
+    digest::digest(x, algo = "md5")
+  }
+  h <- sapply(X = v, FUN = hashfun, USE.NAMES = F)
   substring(h, 1, max.len)
 }
 

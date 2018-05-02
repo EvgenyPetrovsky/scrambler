@@ -63,11 +63,16 @@ processFile <- function(file.in, file.out, seed, rules, skip.headlines, skip.tai
   data   <- loadData(file.in, skip.headlines, data.lines)
   footer <- loadLines(file.in, file.lines - skip.taillines, skip.taillines)
 
-  write.log("scrambling data of", basename(file.in))
-  scdata <- scrambleDataFrame(
-    data, getTableName(header[1]),
-    seed, rules
+  fileredRules <- subset(
+    rules,
+    sapply(
+      X = File, FUN = grepl, x = basename(file.in),
+      ignore.case = T, USE.NAMES = F
+    )
   )
+
+  write.log("scrambling data of", basename(file.in))
+  scdata <- scrambleDataFrame(data, seed, filteredRules)
 
   write.log("saving result file", file.out)
   saveFile(header, scdata, footer, file.out)
