@@ -1,4 +1,4 @@
-Table,Column,Method,Fixed.Value,Max.Length
+File,Column,Method,Fixed.Value,Max.Length
 STG_LOAN_CONTRACTS,N_SANCTIONED_LIMIT,rnorm.num,,
 STG_LOAN_CONTRACTS,N_EOP_CURR_PRIN_BAL,rnorm.num,,
 STG_LOAN_CONTRACTS,N_EOP_BAL,rnorm.num,,

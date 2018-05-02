@@ -4,16 +4,14 @@
 \alias{scrambleDataFrame}
 \title{Scramble dataframe values}
 \usage{
-scrambleDataFrame(data, tablename, seed = 100, scrambling.rules)
+scrambleDataFrame(data, seed = 100, scrambling.rules)
 }
 \arguments{
 \item{data}{- dataframe with data to be scrambles}
 
-\item{tablename}{- tablename (reference to table in scrambling rules)}
-
 \item{seed}{- seed value for randomization}
 
-\item{scrambling.rules}{- scrambling rules}
+\item{scrambling.rules}{- scrambling rules dataframe that contains Column, Method, Fixed.Value, Max.Lenght columns}
 }
 \value{
 Function returns data frame with scrambled values.

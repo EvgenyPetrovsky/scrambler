@@ -6,8 +6,8 @@
 \title{Rules for data scrambling}
 \format{A dataframe with 5 variables
 \describe{
-  \item{Table}{
-    dataframe alias - used to store different rules for different data frames / tables
+  \item{File}{
+    File name / regular expression - used to store different rules for different files
   }
   \item{Column}{
     dataframe column

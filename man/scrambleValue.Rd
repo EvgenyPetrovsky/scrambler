@@ -4,7 +4,7 @@
 \alias{scrambleValue}
 \title{Scramble values}
 \usage{
-scrambleValue(value, method, seed = 100, new.value = "", max.len)
+scrambleValue(value, method, seed = 100, new.value = "", max.len = "")
 }
 \arguments{
 \item{value}{- vector of values to scramble}
