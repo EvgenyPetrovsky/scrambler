@@ -11,6 +11,12 @@ scrambleValue(value, method, seed = 100, new.value = "", max.len)
 
 \item{method}{- obfuscation bethod. Supported methods are \code{shuffle},
 \code{hash}, \code{random.hash}, \code{random.num}, \code{rnorm.num}}
+
+\item{seed}{- seed value for random generation and sampling}
+
+\item{new.value}{- fixed value to replace original one (works only with \code{fixed.value} method)}
+
+\item{max.len}{- maximum length of scrabled value (useful when data column is of limited length)}
 }
 \description{
 The function scrambles vector or values based on method provided

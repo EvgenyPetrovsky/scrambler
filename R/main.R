@@ -4,8 +4,30 @@
 #' @export
 #' @param input.folder - input folder, word directory by default
 #' @param file.names - file wildcard to select files
-#' @param output.folder -
-processFiles <- function(input.folder = ".", file.names = "*", output.folder = "", rules.file = "", seed = 0) {
+#' @param output.folder - folder name to store results. Folder should exist if specified
+#' @param rules.file - filename with rules
+#' @param seed - seed value for random generation and sampling
+#' @param skip.headlines - number of lines in a file before data starts
+#' @param skip.taillines - number of lines before end of a file where data ends
+processFiles <- function(
+  input.folder = ".",
+  file.names = "*",
+  output.folder = "",
+  rules.file = "",
+  seed = 0,
+  skip.headlines = 0,
+  skip.taillines = 0
+) {
+  # log start
+  write.log(
+    "Staring process with parameters",
+    "-input.folder:", input.folder,
+    "-file.names:", file.names,
+    "-output.folder:", output.folder,
+    "-rules.file:", rules.file,
+    "-seed:", seed
+  )
+
   # rules
   rules <- if (rules.file == "") {
     scramble.rules
@@ -23,23 +45,31 @@ processFiles <- function(input.folder = ".", file.names = "*", output.folder = "
   )
   # walk through files and process 1 by 1
   for (idx in 1:length(files.in)) {
+    write.log("processing file", files.in[idx])
     fin <- paste0(input.folder, files.in[idx])
     fout <- paste0(folder.out, files.out[idx])
-    processFile(fin, fout, seed, rules)
+    processFile(fin, fout, seed, rules, skip.headlines, skip.taillines)
   }
+
+  write.log("Process complete")
 
 }
 
-processFile <- function(file.in, file.out, seed, rules) {
-  header <- loadHead(file.in)
-  cols   <- loadCols(file.in)
-  data   <- loadData(file.in)
-  footer <- loadTail(file.in)
+processFile <- function(file.in, file.out, seed, rules, skip.headlines, skip.taillines) {
+  file.lines <- countFileLines(file.in)
+  data.lines <- file.lines - skip.headlines - skip.taillines
+  write.log("loading original file", file.in)
+  header <- loadLines(file.in, 1, skip.headlines + 1)
+  data   <- loadData(file.in, skip.headlines, data.lines)
+  footer <- loadLines(file.in, file.lines - skip.taillines, skip.taillines)
 
+  write.log("scrambling data of", basename(file.in))
   scdata <- scrambleDataFrame(
-    data, getTableName(header),
-    seed, rules)
+    data, getTableName(header[1]),
+    seed, rules
+  )
 
-  saveFile(header, cols, scdata, footer, file.out)
+  write.log("saving result file", file.out)
+  saveFile(header, scdata, footer, file.out)
 }
 

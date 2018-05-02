@@ -1,73 +1,27 @@
-#' load file data and return it as vector of character strings
-
-loadFile <- function(file, row.type) {
-  con <- file(file, "r")
-  pattern <- paste0("^", row.type, ";.*")
-  lines <- c()
-  while(TRUE) {
-    line = readLines(con, 1)
-    if(length(line) == 0) break
-    else if(grepl(pattern, line)) lines <- c(lines, line)
-  }
-  close(con)
-  lines
-}
-
-#' load tabular data from file and return it as data.frame
-loadData <- function(file) {
-  nm <- colnames(read.csv(
-    text = paste0(loadFile(file = file, row.type = 1), collapse = "\n"),
-    header = T, sep = ";"
-  ))
+# load tabular data from file and return it as data.frame
+loadData <- function(file, skip.lines, data.lines) {
   df <- read.csv(
-    text = paste0(loadFile(file = file, row.type = 2), collapse = "\n"),
-    header = F, sep = ";", quote = "\"", dec = ",",
-    na.strings = "", stringsAsFactors = F
+    file = file, header = T, sep = ";", quote = "\"", dec = ",",
+    nrows = data.lines, skip = skip.lines,
+    stringsAsFactors = F
   )
-  colnames(df) <- nm
-
   return(df)
-}
-
-loadHead <- function(file) {
-  loadFile(file = file, row.type = 0)
-}
-
-loadCols <- function(file) {
-  loadFile(file = file, row.type = 1)
-}
-
-loadTail <- function(file) {
-  loadFile(file = file, row.type = 9)
-}
-
-getTableId <- function() {
-  NULL
 }
 
 getTableName <- function(header) {
   unlist(strsplit(header, split = ";"))[4]
 }
 
-
-#' Get CSA Table name from file
-#' @description Function takes filename and returns corresponding table name.
-#'   Table name is stored in row_type = 0 in position 4
-#'
-#' @return Character value that represents OFSAA CSA table name \code{STG_...}
+# Get CSA Table name from file
 loadTableName <- function(file) {
   getTableName(loadHead(file))
 }
 
-#' Write data into file
-#' function takes parts of file and writes it in OFSAA compatible format
-saveFile <- function(header, columns, data, footer, file) {
+# Write data into file
+# function takes parts of file and writes it in OFSAA compatible format
+saveFile <- function(header, data, footer, file) {
   write.table(
     x = header, file = file, append = F,
-    quote = F, row.names = F, col.names = F,
-    fileEncoding = "UTF-8")
-  write.table(
-    x = columns, file = file, append = T,
     quote = F, row.names = F, col.names = F,
     fileEncoding = "UTF-8")
   write.table(
@@ -90,6 +44,7 @@ saveFile <- function(header, columns, data, footer, file) {
 #'
 #' @export
 #' @param file - path to file with rules
+#'
 loadRules <- function(file) {
   csv.data <- subset(
     read.csv(file, colClasses = "character"),
@@ -101,4 +56,43 @@ loadRules <- function(file) {
     x = c("Table", "Column"),
     init = csv.data
   )
+}
+
+#write log
+write.log <- function(msg, ...) {
+  composed <- paste(
+    as.character(Sys.time()),
+    msg,
+    ...
+  )
+  print(composed)
+}
+
+
+countFileLines <- function(file) {
+  con <- file(file, "r")
+  cnt <- 0
+  while(TRUE) {
+    line = readLines(con, 1)
+    if(length(line) == 0) break
+    else cnt <- cnt + 1
+  }
+  close(con)
+  cnt
+}
+
+loadLines <- function(file, start.line = 1, count.lines) {
+  con <- file(file, "r")
+  end.line <- start.line + count.lines
+  lines <- c()
+  cnt <- 0
+  while(TRUE) {
+    line = readLines(con, 1)
+    if(length(line) == 0) break
+    if(cnt > end.line) break
+    cnt <- cnt + 1
+    if(cnt >= start.line & cnt < end.line) lines <- c(lines, line)
+  }
+  close(con)
+  lines
 }

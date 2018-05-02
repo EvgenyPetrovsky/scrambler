@@ -5,14 +5,22 @@
 \title{Process files}
 \usage{
 processFiles(input.folder = ".", file.names = "*", output.folder = "",
-  rules.file = "", seed = 0)
+  rules.file = "", seed = 0, skip.headlines = 0, skip.taillines = 0)
 }
 \arguments{
 \item{input.folder}{- input folder, word directory by default}
 
 \item{file.names}{- file wildcard to select files}
 
-\item{output.folder}{-}
+\item{output.folder}{- folder name to store results. Folder should exist if specified}
+
+\item{rules.file}{- filename with rules}
+
+\item{seed}{- seed value for random generation and sampling}
+
+\item{skip.headlines}{- number of lines in a file before data starts}
+
+\item{skip.taillines}{- number of lines before end of a file where data ends}
 }
 \description{
 This procedure scrambles all files which meet selection criteria according to scramble rules

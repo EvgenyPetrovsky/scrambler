@@ -12,7 +12,8 @@ scrambleDataFrame <- function(data, tablename, seed = 100, scramble.rules) {
     fix.val <- rule$Fixed.Value[1]
     max.len <- rule$Max.Length[1]
 
-    data[, col] <- scrambleValue(data[, col], method, seed, fix.value, max.len)
+    write.log("scrambling", col, "using", method, "method")
+    data[, col] <- scrambleValue(data[, col], method, seed, fix.val, max.len)
 
     return(data)
   }
@@ -27,7 +28,9 @@ scrambleDataFrame <- function(data, tablename, seed = 100, scramble.rules) {
 #' @param value - vector of values to scramble
 #' @param method - obfuscation bethod. Supported methods are \code{shuffle},
 #'   \code{hash}, \code{random.hash}, \code{random.num}, \code{rnorm.num}
-#'
+#' @param seed - seed value for random generation and sampling
+#' @param new.value - fixed value to replace original one (works only with \code{fixed.value} method)
+#' @param max.len - maximum length of scrabled value (useful when data column is of limited length)
 scrambleValue <- function(value, method, seed = 100, new.value = "", max.len) {
   set.seed(seed)
   if (method == "shuffle") {
@@ -39,6 +42,7 @@ scrambleValue <- function(value, method, seed = 100, new.value = "", max.len) {
   } else if (method == "random.num") {
     random.num(value)
   } else if (method == "rnorm.num") {
+    rnorm.num(value)
   } else if (method == "random.date") {
     random.date(value)
   } else if (method == "fixed.value") {
