@@ -23,4 +23,4 @@
 #'     maximum length of scrambled value
 #'   }
 #' }
-"scramble.rules"
+"scrambling.rules"

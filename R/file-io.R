@@ -38,9 +38,9 @@ saveFile <- function(header, data, footer, file) {
 #' Load scrambling rules from file
 #' @description Function takes filename and returns dataframe with rules.
 #' Rules must be stored in scv file with header. Column names should be equal to
-#' columns of \code{scramble.rules} data example
+#' columns of \code{scrambling.rules} data example
 #'
-#' @return dataframe in the format of \code{scramble.rules} data example
+#' @return dataframe in the format of \code{scrambling.rules} data example
 #'
 #' @export
 #' @param file - path to file with rules
