@@ -7,9 +7,9 @@
 #' @param data - dataframe with data to be scrambles
 #' @param tablename - tablename (reference to table in scrambling rules)
 #' @param seed - seed value for randomization
-#' @param scramble.rules - scrambling rules
-scrambleDataFrame <- function(data, tablename, seed = 100, scramble.rules) {
-  rules <- subset(scramble.rules, Table == tablename)
+#' @param scrambling.rules - scrambling rules
+scrambleDataFrame <- function(data, tablename, seed = 100, scrambling.rules) {
+  rules <- subset(scrambling.rules, Table == tablename)
   cols  <- colnames(data)
   cols  <- cols[cols %in% rules$Column]
 
