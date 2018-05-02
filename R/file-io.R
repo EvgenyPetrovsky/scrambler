@@ -81,8 +81,21 @@ saveFile <- function(header, columns, data, footer, file) {
     fileEncoding = "UTF-8")
 }
 
+#' Load scrambling rules from file
+#' @description Function takes filename and returns dataframe with rules.
+#' Rules must be stored in scv file with header. Column names should be equal to
+#' columns of \code{scramble.rules} data example
+#'
+#' @return dataframe in the format of \code{scramble.rules} data example
+#'
+#' @export
+#' @param file - path to file with rules
 loadRules <- function(file) {
-  csv.data <- read.csv(file)
+  csv.data <- subset(
+    read.csv(file, colClasses = "character"),
+    subset = TRUE,
+    select = c("Table", "Column", "Method", "Fixed.Value", "Max.Length")
+  )
   rules <- Reduce(
     f = function(t, c) {t[,c] <- toupper(t[,c]); t},
     x = c("Table", "Column"),
