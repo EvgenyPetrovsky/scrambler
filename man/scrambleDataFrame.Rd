@@ -6,6 +6,18 @@
 \usage{
 scrambleDataFrame(data, tablename, seed = 100, scramble.rules)
 }
+\arguments{
+\item{data}{- dataframe with data to be scrambles}
+
+\item{tablename}{- tablename (reference to table in scrambling rules)}
+
+\item{seed}{- seed value for randomization}
+
+\item{scramble.rules}{- scrambling tules}
+}
+\value{
+Function returns data frame with scrambled values.
+}
 \description{
 The function scrambles vector or values based on method provided
 }

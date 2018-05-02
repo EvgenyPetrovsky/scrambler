@@ -1,6 +1,13 @@
 #' Scramble dataframe values
 #' @description The function scrambles vector or values based on method provided
 #'
+#' @return Function returns data frame with scrambled values.
+#'
+#' @export
+#' @param data - dataframe with data to be scrambles
+#' @param tablename - tablename (reference to table in scrambling rules)
+#' @param seed - seed value for randomization
+#' @param scramble.rules - scrambling rules
 scrambleDataFrame <- function(data, tablename, seed = 100, scramble.rules) {
   rules <- subset(scramble.rules, Table == tablename)
   cols  <- colnames(data)
