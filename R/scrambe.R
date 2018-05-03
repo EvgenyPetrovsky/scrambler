@@ -23,7 +23,11 @@ scrambleDataFrame <- function(data, seed = 100, scrambling.rules) {
     return(data)
   }
 
-  scdata <- Reduce(f = applyRule, x = (1:nrow(rules)), init = data)
+  scdata <- if (nrow(rules) > 0) {
+    Reduce(f = applyRule, x = (1:nrow(rules)), init = data)
+  } else {
+    data
+  }
 }
 
 #' Scramble values

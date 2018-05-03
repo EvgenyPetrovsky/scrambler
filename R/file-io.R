@@ -46,16 +46,9 @@ saveFile <- function(header, data, footer, file) {
 #' @param file - path to file with rules
 #'
 loadRules <- function(file) {
-  csv.data <- subset(
-    read.csv(file, colClasses = "character"),
-    subset = TRUE,
-    select = c("File", "Column", "Method", "Fixed.Value", "Max.Length")
-  )
-  rules <- Reduce(
-    f = function(t, c) {t[,c] <- toupper(t[,c]); t},
-    x = c("File", "Column"),
-    init = csv.data
-  )
+  csv.data <- read.csv(file, colClasses = "character")
+  # subset loaded data
+  csv.data[, c("File", "Column", "Method", "Fixed.Value", "Max.Length")]
 }
 
 #write log
