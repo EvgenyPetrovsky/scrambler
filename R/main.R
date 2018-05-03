@@ -57,11 +57,17 @@ processFiles <- function(
 
 processFile <- function(file.in, file.out, seed, rules, skip.headlines, skip.taillines) {
   file.lines <- countFileLines(file.in)
-  data.lines <- file.lines - skip.headlines - skip.taillines
+  data.lines <- file.lines - skip.headlines - skip.taillines - 1
   write.log("loading original file", file.in)
+  # always load header because we take table column names as they are
   header <- loadLines(file.in, 1, skip.headlines + 1)
   data   <- loadData(file.in, skip.headlines, data.lines)
-  footer <- loadLines(file.in, file.lines - skip.taillines, skip.taillines)
+  # load footer only if file has it
+  footer <- if (skip.taillines > 0) {
+    loadLines(file.in, file.lines - skip.taillines + 1, skip.taillines)
+  } else {
+    NA
+  }
 
   filteredRules <- subset(
     rules,

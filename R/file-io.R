@@ -26,13 +26,14 @@ saveFile <- function(header, data, footer, file) {
     fileEncoding = "UTF-8")
   write.table(
     x = data, file = file, append = T,
-    #eol = ";\r\n",
     quote = T, sep = ";", dec = ",", na = "", row.names = F, col.names = F,
     fileEncoding = "UTF-8")
-  write.table(
-    x = footer, file = file, append = T,
-    quote = F, row.names = F, col.names = F,
-    fileEncoding = "UTF-8")
+  if(!is.na(footer[1])) {
+    write.table(
+      x = footer, file = file, append = T,
+      quote = F, row.names = F, col.names = F,
+      fileEncoding = "UTF-8")
+  }
 }
 
 #' Load scrambling rules from file
