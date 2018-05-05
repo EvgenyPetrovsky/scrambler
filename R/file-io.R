@@ -8,15 +8,6 @@ loadData <- function(file, skip.lines, data.lines) {
   return(df)
 }
 
-getTableName <- function(header) {
-  unlist(strsplit(header, split = ";"))[4]
-}
-
-# Get CSA Table name from file
-loadTableName <- function(file) {
-  getTableName(loadHead(file))
-}
-
 # Write data into file
 # function takes parts of file and writes it in OFSAA compatible format
 saveFile <- function(header, data, footer, file) {
@@ -49,7 +40,7 @@ saveFile <- function(header, data, footer, file) {
 loadRules <- function(file) {
   csv.data <- read.csv(file, colClasses = "character")
   # subset loaded data
-  csv.data[, c("File", "Column", "Method", "Fixed.Value", "Max.Length")]
+  csv.data[, c("File", "Column", "Method", "Method.Param", "Max.Length")]
 }
 
 #write log
@@ -62,7 +53,7 @@ write.log <- function(msg, ...) {
   print(composed)
 }
 
-
+# count number of lines in a file
 countFileLines <- function(file) {
   con <- file(file, "r")
   cnt <- 0
@@ -75,6 +66,7 @@ countFileLines <- function(file) {
   cnt
 }
 
+# loan specified number of lines in a file starting from specific file
 loadLines <- function(file, start.line = 1, count.lines) {
   con <- file(file, "r")
   end.line <- start.line + count.lines

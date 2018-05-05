@@ -4,7 +4,7 @@
 \alias{scrambleValue}
 \title{Scramble values}
 \usage{
-scrambleValue(value, method, seed = 100, new.value = "", max.len = "")
+scrambleValue(value, method, seed = 100, method.param = "", max.len = "")
 }
 \arguments{
 \item{value}{- vector of values to scramble}
@@ -14,7 +14,7 @@ scrambleValue(value, method, seed = 100, new.value = "", max.len = "")
 
 \item{seed}{- seed value for random generation and sampling}
 
-\item{new.value}{- fixed value to replace original one (works only with \code{fixed.value} method)}
+\item{method.param}{- additional information associated with method; for example hash algorithm or exact fixed value}
 
 \item{max.len}{- maximum length of scrabled value (useful when data column is of limited length)}
 }

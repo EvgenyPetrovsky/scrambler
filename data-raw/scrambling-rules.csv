@@ -1,4 +1,4 @@
-File,Column,Method,Fixed.Value,Max.Length
+File,Column,Method,Method.Param,Max.Length
 F_\w+_1009.*,N_AVAILABLE_UNDRAWN_AMT,rnorm.num,,
 F_\w+_1009.*,N_AVAILABLE_UNDRAWN_AMT_LCY,rnorm.num,,
 F_\w+_1009.*,N_COMMITMENT_AMT,rnorm.num,,
