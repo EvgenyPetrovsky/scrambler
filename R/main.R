@@ -38,17 +38,20 @@ processFiles <- function(
   files.in <- dir(path = input.folder, pattern = file.names, full.names = F)
   # output folder
   folder.out <- ifelse(output.folder == "", input.folder, output.folder)
-  # output file names
-  files.out <- paste0(
-    files.in,
-    ifelse(folder.out == input.folder, ".scrambled", "")
-  )
   # walk through files and process 1 by 1
-  for (idx in 1:length(files.in)) {
-    write.log("processing file", files.in[idx])
-    fin <- paste0(input.folder, files.in[idx])
-    fout <- paste0(folder.out, files.out[idx])
-    processFile(fin, fout, seed, rules, skip.headlines, skip.taillines)
+  if (length(files.in) == 0) {
+    write.log("nothing to process")
+  } else {
+    for (file.in in files.in) {
+      write.log("processing file", file.in)
+      fin  <- paste0(input.folder, file.in)
+      fout <- paste0(
+        folder.out,
+        file.in,
+        ifelse(folder.out == input.folder, ".scrambled", "")
+      )
+      processFile(fin, fout, seed, rules, skip.headlines, skip.taillines)
+    }
   }
 
   write.log("Process complete")
@@ -61,7 +64,11 @@ processFile <- function(file.in, file.out, seed, rules, skip.headlines, skip.tai
   write.log("loading original file", file.in)
   # always load header because we take table column names as they are
   header <- loadLines(file.in, 1, skip.headlines + 1)
-  data   <- loadData(file.in, skip.headlines, data.lines)
+  data   <- if (data.lines == 0) {
+    data.frame(Dummy = character(), stringsAsFactors = F)
+  } else {
+    loadData(file.in, skip.headlines, data.lines)
+  }
   # load footer only if file has it
   footer <- if (skip.taillines > 0) {
     loadLines(file.in, file.lines - skip.taillines + 1, skip.taillines)
