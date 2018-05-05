@@ -50,7 +50,7 @@ write.log <- function(msg, ...) {
     msg,
     ...
   )
-  print(composed)
+  write(composed, stdout())
 }
 
 # count number of lines in a file
