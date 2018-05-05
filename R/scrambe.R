@@ -98,7 +98,7 @@ random.date <- function(v) {
   NULL
 }
 
-random.hash <- function(max.len) {
+random.hash <- function(max.len, method.param) {
   NULL
 }
 
