@@ -1,6 +1,8 @@
 library(scrambler)
 
+# general variables
 ns <- (-100:100)
+testdata.dir <- "./data-temp/test"
 
 test_that("size preservation", {
   s <- scrambleValue(ns, "fixed.value")
@@ -31,4 +33,42 @@ test_that("scramblr data.frame", {
   )
   sd <- scrambleDataFrame(df, scrambling.rules = sr)
   expect_true(TRUE)
+})
+
+save_testfile <- function(lines, filename) {
+  if (!dir.exists(testdata.dir)) {
+    dir.create(testdata.dir, recursive = T)
+  }
+  file <- paste(testdata.dir, filename, sep = "/")
+  saveLines(lines = lines, file = file, append = F)
+}
+
+load_testfile <- function(filename) {
+  file <- paste(testdata.dir, filename, sep = "/")
+  loadLines(file, start.line = 1, count.lines = 10000L)
+}
+
+ctln_testfile <- function(filename) {
+  file <- paste(testdata.dir, filename, sep = "/")
+  countFileLines(file)
+}
+
+test_that("test file without data", {
+  data <- c("0;header", "1;header", "9;footer")
+  save_testfile(data, "header-footer.csv")
+  empty.rules <- paste(colnames(scrambling.rules), collapse = ",")
+  save_testfile(empty.rules, "empty-rules.csv")
+  processFiles(
+    input.folder   = paste0(testdata.dir, "/"),
+    file.names     = "^header-footer.csv$",
+    #rules.file     = paste0(testdata.dir, "/", "empty-rules.csv"),
+    skip.headlines = 1,
+    skip.taillines = 1,
+    seed           = 1
+  )
+
+  lines.in.original.file  <- ctln_testfile("header-footer.csv")
+  lines.in.scrambled.file <- ctln_testfile("header-footer.csv.scrambled")
+
+  expect_equal(lines.in.original.file, lines.in.scrambled.file)
 })
