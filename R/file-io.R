@@ -1,29 +1,12 @@
-# load tabular data from file and return it as data.frame
-loadData <- function(file, skip.lines, data.lines) {
-  df <- read.csv(
-    file = file, header = T, sep = ";", quote = "\"", dec = ",",
-    nrows = data.lines, skip = skip.lines,
-    stringsAsFactors = F
-  )
-  return(df)
-}
-
 # Write data into file
 # function takes parts of file and writes it in OFSAA compatible format
 saveFile <- function(header, data, footer, file) {
-  write.table(
-    x = header, file = file, append = F,
-    quote = F, row.names = F, col.names = F,
-    fileEncoding = "UTF-8")
-  write.table(
-    x = data, file = file, append = T,
-    quote = T, sep = ";", dec = ",", na = "", row.names = F, col.names = F,
-    fileEncoding = "UTF-8")
+  saveLines(lines = header, file = file, append = F)
+  if (nrow(data) > 0) {
+    saveData(data, file)
+  }
   if(!is.na(footer[1])) {
-    write.table(
-      x = footer, file = file, append = T,
-      quote = F, row.names = F, col.names = F,
-      fileEncoding = "UTF-8")
+    saveLines(lines = footer, file = file, append = T)
   }
 }
 
@@ -81,4 +64,29 @@ loadLines <- function(file, start.line = 1, count.lines) {
   }
   close(con)
   lines
+}
+
+saveLines <- function(lines, file, append) {
+  write.table(
+    x = lines, file = file, append = append,
+    quote = F, row.names = F, col.names = F,
+    fileEncoding = "UTF-8")
+}
+
+# load tabular data from file and return it as data.frame
+loadData <- function(file, skip.lines, data.lines) {
+  df <- read.csv(
+    file = file, header = T, sep = ";", quote = "\"", dec = ",",
+    nrows = data.lines, skip = skip.lines,
+    stringsAsFactors = F
+  )
+  return(df)
+}
+# save vector of data into file as separate lines
+saveData <- function(data, file) {
+  write.table(
+    x = data, file = file, append = T,
+    quote = T, sep = ";", dec = ",", na = "", row.names = F, col.names = F,
+    fileEncoding = "UTF-8"
+  )
 }
