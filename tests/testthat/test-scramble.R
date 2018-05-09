@@ -3,11 +3,43 @@ library(scrambler)
 # general variables
 ns <- (-100:100)
 testdata.dir <- "./data-temp/test"
+algos <- c(
+  "md5", "sha1", "crc32", "sha256", "sha512", "xxhash32", "xxhash64", "murmur32"
+)
+
+fhash <- function(x, m = "md5") scrambleValue(x, "hash", method.param = m)
+fdgst <- function(x, m = "md5") digest::digest(x, algo = m)
 
 test_that("size preservation", {
   s <- scrambleValue(ns, "fixed.value")
   expect_equal(length(ns), length(s))
   expect_equal(length(scrambleValue(1, "fixed.value")), 1)
+})
+
+test_that("hashing vector of values is vector of hased values", {
+  expect_equal(
+    fhash(ns),
+    sapply(X = ns, FUN = fhash, USE.NAMES = F)
+  )
+  expect_equal(
+    fhash(LETTERS),
+    sapply(X = LETTERS, FUN = fhash, USE.NAMES = F)
+  )
+})
+
+test_that("scrambling works as digest", {
+  expect_equal(
+    sapply(X = algos, FUN = function(x) {fhash(1, m = x)}, USE.NAMES = F),
+    sapply(X = algos, FUN = function(x) {fdgst(1, m = x)}, USE.NAMES = F)
+  )
+  expect_equal(
+    sapply(X = algos, FUN = function(x) {fhash("A", m = x)}, USE.NAMES = F),
+    sapply(X = algos, FUN = function(x) {fdgst("A", m = x)}, USE.NAMES = F)
+  )
+})
+
+test_that("scrambling of NA value is NA value", {
+  expect_true(is.na(fhash(NA)))
 })
 
 test_that("reshuffling", {
@@ -17,7 +49,7 @@ test_that("reshuffling", {
   expect_false(isTRUE(all.equal(s, ns)))
 })
 
-test_that("scramblr data.frame", {
+test_that("scramble data.frame", {
   df <- data.frame(
     stringsAsFactors = F,
     Client  = c("Client 1", "Client 2", "Client 3"),
