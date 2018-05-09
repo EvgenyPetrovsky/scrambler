@@ -1,4 +1,7 @@
 {
+  // Render vertical rulers after a certain number of monospace characters. Use multiple values for multiple rulers. No rulers are drawn if array is empty
+  "editor.rulers": [80],
+
   // Insert spaces when pressing Tab. This setting is overridden based on the file contents when `editor.detectIndentation` is on.
   "editor.insertSpaces": true,
 
