@@ -75,7 +75,7 @@ shuffle <- function (v) {
 
 hash <- function(v, algo = "md5") {
   hashfun <- function(x) {
-    digest::digest(x, algo)
+    ifelse(is.na(x), x, digest::digest(x, algo))
   }
   h <- sapply(X = v, FUN = hashfun, USE.NAMES = F)
 }
