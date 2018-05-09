@@ -48,7 +48,7 @@ scrambleValue <- function(value, method, seed = 100, method.param = "", max.len 
   } else if (method == "hash") {
     hash(value, method.param)
   } else if (method == "random.hash") {
-    random.hash(value, method.param)
+    random.hash(method.param)
   } else if (method == "random.num") {
     random.num(value)
   } else if (method == "rnorm.num") {
