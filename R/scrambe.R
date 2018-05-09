@@ -18,9 +18,10 @@ scrambleDataFrame <- function(data, seed = 100, scrambling.rules) {
     max.len <- rule$Max.Length
 
     write.log("scrambling", col, "using", method, "method")
-    data[, c(col)] <- scrambleValue(data[, col], method, seed, mparam, max.len)
+    scr <- data
+    scr[, c(col)] <- scrambleValue(data[, col], method, seed, mparam, max.len)
 
-    return(data)
+    return(scr)
   }
 
   scdata <- if (nrow(rules) > 0) {
@@ -72,12 +73,11 @@ shuffle <- function (v) {
   sample(v, length(v), replace = F)
 }
 
-hash <- function(v, max.len = 1000000L, algo = "md5") {
+hash <- function(v, algo = "md5") {
   hashfun <- function(x) {
     digest::digest(x, algo)
   }
   h <- sapply(X = v, FUN = hashfun, USE.NAMES = F)
-
 }
 
 rnorm.num <- function(v) {
@@ -98,7 +98,7 @@ random.date <- function(v) {
   NULL
 }
 
-random.hash <- function(max.len, method.param) {
+random.hash <- function(method.param) {
   NULL
 }
 
