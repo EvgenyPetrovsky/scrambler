@@ -83,16 +83,19 @@ hash <- function(v, algo = "md5") {
 rnorm.num <- function(v) {
   cnt <- length(v)
   std <- sd(v, na.rm = T)
-  nrm <- rnorm(cnt, 0, std)
-  sign(v) * abs(v + nrm)
+  nrm <- rnorm(cnt, 0, ifelse(is.na(std), 0, std))
+  h   <- sign(v) * abs(v + nrm)
+  ifelse(is.na(v) | v == 0, v, h)
 }
 
 random.num <- function(v) {
   m   <- mean(v, na.rm = T)
   cnt <- length(v)
   std <- sd(v, na.rm = T)
-  nrm <- rnorm(cnt, 0, std)
-  sign(v) * abs(nrm + m)}
+  nrm <- rnorm(cnt, 0, ifelse(is.na(std), 0, std))
+  h   <- sign(v) * abs(nrm + m)
+  ifelse(is.na(v) | v == 0, v, h)
+}
 
 random.date <- function(v) {
   NULL
