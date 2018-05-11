@@ -47,10 +47,17 @@ test_that("randomization of NA number is NA number", {
   expect_equal(is.na(scrambleValue(c(NA, 1, 2), "rnorm.num")), c(TRUE, FALSE, FALSE))
   expect_equal(is.na(scrambleValue(c(NA, NA, 2), "random.num")), c(TRUE, TRUE, FALSE))
   expect_equal(is.na(scrambleValue(c(NA, NA, NA), "random.num")), c(TRUE, TRUE, TRUE))
+  expect_equal(is.na(scrambleValue(c(0, 1, 2), "random.num")), c(FALSE, FALSE, FALSE))
+  expect_equal(is.na(scrambleValue(c(NA, 1, 2), "random.num")), c(TRUE, FALSE, FALSE))
+  expect_equal(is.na(scrambleValue(c(NA, NA, 2), "random.num")), c(TRUE, TRUE, FALSE))
+  expect_equal(is.na(scrambleValue(c(NA, NA, NA), "random.num")), c(TRUE, TRUE, TRUE))
 })
 
 test_that("randomization of 0 number is 0 number", {
   expect_equal(scrambleValue(c(-1, 0, 1), "rnorm.num")[2], 0)
+  expect_equal(scrambleValue(c(NA, 0, 0), "rnorm.num")[2], 0)
+  expect_equal(scrambleValue(c(NA, 0, NA), "rnorm.num")[2], 0)
+  expect_equal(scrambleValue(c(-1, 0, 1), "random.num")[2], 0)
   expect_equal(scrambleValue(c(NA, 0, 0), "random.num")[2], 0)
   expect_equal(scrambleValue(c(NA, 0, NA), "random.num")[2], 0)
 })
