@@ -1,6 +1,10 @@
 # Write data into file
 # function takes parts of file and writes it in OFSAA compatible format
 saveFile <- function(header, data, footer, file) {
+  # check if directory exists and create if necessary
+  filedir <- dirname(file)
+  if (!dir.exists(filedir)) dir.create(filedir, recursive = T)
+  # save
   saveLines(lines = header, file = file, append = F)
   if (nrow(data) > 0) {
     saveData(data, file)
