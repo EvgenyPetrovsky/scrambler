@@ -81,7 +81,7 @@ saveLines <- function(lines, file, append) {
 loadData <- function(file, skip.lines, data.lines) {
   df <- read.csv(
     file = file, header = T, sep = ";", quote = "\"", dec = ",",
-    nrows = data.lines, skip = skip.lines,
+    nrows = data.lines, skip = skip.lines, colClasses = "character",
     stringsAsFactors = F
   )
   return(df)
