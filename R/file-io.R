@@ -81,16 +81,24 @@ saveLines <- function(lines, file, append) {
 loadData <- function(file, skip.lines, data.lines) {
   df <- read.csv(
     file = file, header = T, sep = ";", quote = "\"", dec = ",",
-    nrows = data.lines, skip = skip.lines, colClasses = "character",
+    nrows = data.lines, skip = skip.lines,
+    colClasses = "character",
     stringsAsFactors = F
   )
   return(df)
 }
 # save vector of data into file as separate lines
 saveData <- function(data, file) {
+  # detect if column should be enclosed with quotes
+  detect <- function(x) {
+    any(grepl(";", x, fixed = T), grepl("\"", x, fixed = T), na.rm = T)
+  }
+  # create vector of columns to be enclosed with quotes
+  commas <- which(sapply(data, detect))
+  # write result
   write.table(
     x = data, file = file, append = T,
-    quote = T, sep = ";", dec = ",", na = "", row.names = F, col.names = F,
+    quote = commas, sep = ";", dec = ",", na = "", row.names = F, col.names = F,
     fileEncoding = "UTF-8"
   )
 }
