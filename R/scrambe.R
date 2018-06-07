@@ -41,7 +41,7 @@ scrambleDataFrame <- function(data, seed = 100, scrambling.rules) {
 #' @param seed - seed value for random generation and sampling
 #' @param method.param - additional information associated with method; for example hash algorithm or exact fixed value
 #' @param max.len - maximum length of scrabled value (useful when data column is of limited length)
-scrambleValue <- function(value, method, seed = 100, method.param = "", max.len = "") {
+scrambleValue <- function(value, method, seed = 100, method.param = "", max.len) {
   set.seed(seed)
   result <- if (method == "shuffle") {
     shuffle(value)
@@ -61,10 +61,10 @@ scrambleValue <- function(value, method, seed = 100, method.param = "", max.len 
     fixed.value(value, method.param)
   }
 
-  if (max.len == "") {
+  if (missing(max.len) || is.na(max.len)) {
     result
   } else {
-    substring(result, 1, as.integer(max.len))
+    substring(result, 1, max.len)
   }
 
 }

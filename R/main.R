@@ -96,3 +96,16 @@ processFile <- function(file.in, file.out, seed, rules, skip.headlines, skip.tai
   saveFile(header, scdata, footer, file.out)
 }
 
+
+# in development
+main <- function() {
+  args <- commandArgs(trailingOnly = T)
+
+  folder.in  <- args[1]
+  file.names <- args[2]
+  folder.out <- args[3]
+  rules      <- args[4]
+  seed       <- args[5]
+  skip.headlines <- 0
+  skip.taillines <- 0
+}

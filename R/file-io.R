@@ -25,9 +25,15 @@ saveFile <- function(header, data, footer, file) {
 #' @param file - path to file with rules
 #'
 loadRules <- function(file) {
-  csv.data <- read.csv(file, colClasses = "character")
+  csv.data <- read.csv(
+    file,
+    colClasses = c("character", "character", "character", "character", "integer"),
+    stringsAsFactors = F)
   # subset loaded data
-  csv.data[, c("File", "Column", "Method", "Method.Param", "Max.Length")]
+  subset(
+    csv.data,
+    select = c("File", "Column", "Method", "Method.Param", "Max.Length")
+  )
 }
 
 #write log
@@ -83,7 +89,7 @@ loadData <- function(file, skip.lines, data.lines) {
     file = file, header = T, sep = ";", quote = "\"", dec = ",",
     nrows = data.lines, skip = skip.lines,
     colClasses = "character",
-    stringsAsFactors = F
+    stringsAsFactors = F, encoding = "WINDOWS-1252"
   )
   return(df)
 }
