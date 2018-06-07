@@ -52,3 +52,34 @@ You can scramble vector of values by using `scrambleValue` function and specifyi
 ```R
 scrambler::scrambleValue(value = myvector, method = "hash", seed = 112)
 ```
+
+## Rules
+
+Scrambiling rules are defined and maintained locally. They define how scrambling applies to file / column and what algorithm has to be used.
+
+Depending on use (see section above) rules can be provided as a data.frame (for `scrambleDataFrame`) or path to .csv file (for `processFiles`) which contains them.
+
+Rules structure is represented in table below:
+
+| Attribute      | Desctiption                                    |
+|----------------|------------------------------------------------|
+| File | Regular expression for file name to process by rule. This value is ignored when scrambling applied to data.frame directly (via call of `scrambleDataFrame` function) | 
+| Column | Exact column name to be processed by rule |
+| Method | Scrambling method to be applied (see Methods table below) |
+| Method.Param | Method parameter (see Methods table below) |
+| Max.Length | maximum number of characters, in case when light of result should be of limited length |
+
+You can always refer to demo-rules in [`scrambler::scrambling.rules`](/data-raw/scrambling-rules.csv) for some examples.
+
+## Methods
+
+List of supported methods and their parameters
+
+| Method      | Parameter   | Desctiption                                    |
+|-------------|-------------|------------------------------------------------|
+| shuffle     |             | Shuffle values in column according to `seed` (parameter of function call) |
+| hash        | algo        | Digest value according to `algo` parameter of digest function of [`digest`](https://cran.r-project.org/package=digest) package. Keep empty values empty. |
+| random.hash | algo        | _Not yet implemented_ |
+| random.num  |             | Generate random numbers using mean value and standard deviation of numbers provided. Keep empty and zero values. |
+| rnorm.num   |             | Generate random numbers with maen = 0 and standard deviation of given values; add generated values to given values. Keep empty and zero values. |
+| fixed.value | value       | Use fixed value given as a parameter |
