@@ -83,3 +83,87 @@ List of supported methods and their parameters
 | random.num  |             | Generate random numbers using mean value and standard deviation of numbers provided. Keep empty and zero values. |
 | rnorm.num   |             | Generate random numbers with maen = 0 and standard deviation of given values; add generated values to given values. Keep empty and zero values. |
 | fixed.value | value       | Use fixed value given as a parameter |
+
+## Examples
+
+In this section you will find working examples. You need to run R session, copy paste code snippets and execute them. 
+
+### Vectors
+
+```R
+# generate input values
+input.vector <- c("John", "Mike", "Alice")
+# scramble values
+output.vector <- scrambler::scrambleValue(
+  value = input.vector, method = "hash", seed = 112
+)
+# show results
+output.vector
+```
+
+### Data frames
+
+```R
+# generate some input data
+input.data <- data.frame(
+  Name = c("John", "Mike", "Alice"), 
+  Balance = c(10, 12, 100), 
+  Country = c("US", "GB", "SG")
+)
+# define rules for Name and Balance
+rules <- data.frame(
+  File = c(NA, NA), 
+  Column = c("Name", "Balance"), 
+  Method = c("hash", "random.num"), 
+  Method.Param = c("md5", NA), 
+  Max.Length = c(NA, NA), 
+  stringsAsFactors = F
+)
+# scramble data
+output.data <- scrambler::scrambleDataFrame(
+  data = input.data, seed = 100, scrambling.rules = rules
+)
+# show results
+output.data
+```
+
+### Files
+
+Please be aware that script below generates folders and files, writes and reads data. You have to check that working directory (you can check it with `getwd()` function) will not be negatively affected.
+
+```R
+# create folder structure
+folders <- c("./demo", "./demo/in", "./demo/out")
+for (folder in folders) if (!dir.exists(folder)) dir.create(folder)
+
+# generate some input data
+input.data <- data.frame(
+  Name = c("John", "Mike", "Alice"), 
+  Balance = c(10, 12, 100), 
+  Country = c("US", "GB", "SG")
+)
+write.table(
+  x = input.data, file = "./demo/in/ACCOUNTS_20180430.dat", 
+  sep = ";", dec = ",", append = F, row.names = F
+)
+
+# define rules for Name and Balance
+rules <- data.frame(
+  File = c("ACCOUNTS_\\d{8}\\.dat", "ACCOUNTS_\\d{8}\\.dat"), 
+  Column = c("Name", "Balance"), 
+  Method = c("hash", "random.num"), 
+  Method.Param = c("md5", NA), 
+  Max.Length = c(NA, NA), 
+  stringsAsFactors = F
+)
+write.csv(
+  x = rules, file = "./demo/rules.csv", row.names = F
+)
+
+# scramble data
+scrambler::processFiles(
+  input.folder = "./demo/in/", file.names = "ACCOUNTS_.*", output.folder = "./demo/out/",
+  rules.file = "./demo/rules.csv", seed = 100
+)
+
+```
