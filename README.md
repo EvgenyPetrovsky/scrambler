@@ -7,6 +7,8 @@ R Package that scrambles sensitive data.
 
 ## Installation
 
+Since it is R package you need to have R installed. Please refer to [CRAN](https://cran.r-project.org/) __Download and Install R__ section for additional details and instructions on how to do it.
+
 If you are windows user then please install dependendent packages manually
 
 ```R
