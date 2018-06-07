@@ -135,7 +135,6 @@ Please be aware that script below generates folders and files, writes and reads 
 # create folder structure
 folders <- c("./demo", "./demo/in", "./demo/out")
 for (folder in folders) if (!dir.exists(folder)) dir.create(folder)
-
 # generate some input data
 input.data <- data.frame(
   Name = c("John", "Mike", "Alice"), 
@@ -146,7 +145,6 @@ write.table(
   x = input.data, file = "./demo/in/ACCOUNTS_20180430.dat", 
   sep = ";", dec = ",", append = F, row.names = F
 )
-
 # define rules for Name and Balance
 rules <- data.frame(
   File = c("ACCOUNTS_\\d{8}\\.dat", "ACCOUNTS_\\d{8}\\.dat"), 
@@ -159,11 +157,9 @@ rules <- data.frame(
 write.csv(
   x = rules, file = "./demo/rules.csv", row.names = F
 )
-
 # scramble data
 scrambler::processFiles(
   input.folder = "./demo/in/", file.names = "ACCOUNTS_.*", output.folder = "./demo/out/",
   rules.file = "./demo/rules.csv", seed = 100
 )
-
 ```
