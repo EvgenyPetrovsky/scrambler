@@ -29,6 +29,16 @@ loadRules <- function(file) {
     file,
     colClasses = c("character", "character", "character", "character", "integer"),
     stringsAsFactors = F)
+  # required columns
+  cols <- c("File", "Column", "Method", "Method.Param", "Max.Length")
+  if (!all(cols == colnames(csv.data))) stop(
+    paste(
+      "Rules file", file, "does not contain all required columns: [",
+      paste(cols, collapse = ", "), "].",
+      "Actual list of columns in rules file is:",
+      paste(colnames(csv.data), collapse = ", ")
+    )
+  )
   # subset loaded data
   subset(
     csv.data,
