@@ -1,7 +1,7 @@
 # scrambler
 
 [![Build
-Status](https://travis-ci.org/EvgenyPetrovsky/scrambler.svg?branch=master)](https://travis-ci.org/EvgenyPetrovsky/scrambler)
+Status](https://travis-ci.org/EvgenyPetrovsky/scrambler.svg?branch=master)](https://travis-ci.org/EvgenyPetrovsky/scrambler) [![codecov](https://codecov.io/gh/EvgenyPetrovsky/scrambler/branch/master/graphs/badge.svg)](https://codecov.io/gh/EvgenyPetrovsky/scrambler)
 
 R Package that scrambles sensitive data.
 
