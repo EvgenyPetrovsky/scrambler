@@ -4,6 +4,8 @@ language: R
 sudo: false
 cache: packages
 
+# Code coverage for R: see example at https://github.com/codecov/example-r
+
 r_packages:
   - covr
 
