@@ -113,7 +113,7 @@ test_that("test file without data", {
   processFiles(
     input.folder   = paste0(testdata.dir, "/"),
     file.names     = "^header-footer.csv$",
-    #rules.file     = paste0(testdata.dir, "/", "empty-rules.csv"),
+    rules.file     = paste0(testdata.dir, "/", "empty-rules.csv"),
     skip.headlines = 1,
     skip.taillines = 1,
     seed           = 1
