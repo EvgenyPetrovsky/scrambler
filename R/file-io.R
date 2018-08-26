@@ -104,10 +104,10 @@ saveLines <- function(lines, file, append) {
 }
 
 # load tabular data from file and return it as data.frame
-loadData <- function(file, skip.lines, data.lines) {
+loadData <- function(file, skip.lines, read.lines) {
   df <- read.csv(
     file = file, header = T, sep = ";", quote = "\"", dec = ",",
-    nrows = data.lines, skip = skip.lines,
+    nrows = read.lines, skip = skip.lines,
     colClasses = "character",
     stringsAsFactors = F, encoding = "WINDOWS-1252"
   )
