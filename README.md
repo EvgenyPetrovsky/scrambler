@@ -163,3 +163,12 @@ scrambler::processFiles(
   rules.file = "./demo/rules.csv", seed = 100
 )
 ```
+
+For huge files there is an option to process them in portions (chunks), size can be specified via `chunksize` parameter. below is example of previous call but with parameter specified
+
+```R
+scrambler::processFiles(
+  input.folder = "./demo/in/", file.names = "ACCOUNTS_.*", output.folder = "./demo/out/",
+  rules.file = "./demo/rules.csv", seed = 100, chunksize = 100000
+)
+```

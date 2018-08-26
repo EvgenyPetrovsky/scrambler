@@ -111,7 +111,6 @@ processFile <- function(
       NULL
     } else {
       callbackfun <- function(data, pos) {
-        write.log(paste0("processing line ", pos))
         saveData(data = processData(data), file = file.out)
       }
       readr::read_csv_chunked(
