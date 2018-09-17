@@ -4,24 +4,30 @@
 \alias{processFiles}
 \title{Process files}
 \usage{
-processFiles(input.folder = ".", file.names = "*", output.folder = "",
-  rules.file = "", seed = 0, skip.headlines = 0, skip.taillines = 0)
+processFiles(input.folder = ".", file.names = "*",
+  output.folder = "", rules.file = "", seed = 0,
+  skip.headlines = 0, skip.taillines = 0, chunksize = 0)
 }
 \arguments{
-\item{input.folder}{- input folder, word directory by default}
+\item{input.folder}{input folder, word directory by default}
 
-\item{file.names}{- file wildcard to select files}
+\item{file.names}{file wildcard to select files}
 
-\item{output.folder}{- folder name to store results. Folder should exist if specified}
+\item{output.folder}{folder name to store results. Folder should exist if
+specified}
 
-\item{rules.file}{- filename with rules}
+\item{rules.file}{filename with rules}
 
-\item{seed}{- seed value for random generation and sampling}
+\item{seed}{seed value for random generation and sampling}
 
-\item{skip.headlines}{- number of lines in a file before data starts}
+\item{skip.headlines}{number of lines in a file before data starts}
 
-\item{skip.taillines}{- number of lines before end of a file where data ends}
+\item{skip.taillines}{number of lines before end of a file where data ends}
+
+\item{chunksize}{specifies if file should be read and processed by portions,
+portion denotes number of lines}
 }
 \description{
-This procedure scrambles all files which meet selection criteria according to scramble rules
+This procedure scrambles all files which meet selection criteria
+  according to scramble rules
 }

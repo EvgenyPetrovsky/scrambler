@@ -1,3 +1,13 @@
+# Create file
+# function generates empty file and creates directories if necessary
+createFile <- function(file) {
+  # check if directory exists and create if necessary
+  filedir <- dirname(file)
+  if (!dir.exists(filedir)) dir.create(filedir, recursive = T)
+  # save empty file
+  saveLines(lines = character(), file = file, append = F)
+}
+
 # Write data into file
 # function takes parts of file and writes it in OFSAA compatible format
 saveFile <- function(header, data, footer, file) {
@@ -94,15 +104,16 @@ saveLines <- function(lines, file, append) {
 }
 
 # load tabular data from file and return it as data.frame
-loadData <- function(file, skip.lines, data.lines) {
+loadData <- function(file, skip.lines, read.lines) {
   df <- read.csv(
     file = file, header = T, sep = ";", quote = "\"", dec = ",",
-    nrows = data.lines, skip = skip.lines,
+    nrows = read.lines, skip = skip.lines,
     colClasses = "character",
     stringsAsFactors = F, encoding = "WINDOWS-1252"
   )
   return(df)
 }
+
 # save vector of data into file as separate lines
 saveData <- function(data, file) {
   # detect if column should be enclosed with quotes
