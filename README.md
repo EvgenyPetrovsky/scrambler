@@ -83,6 +83,7 @@ List of supported methods and their parameters
 | random.num  |             | Generate random numbers using mean value and standard deviation of numbers provided. Keep empty and zero values. |
 | rnorm.num   |             | Generate random numbers with maen = 0 and standard deviation of given values; add generated values to given values. Keep empty and zero values. |
 | fixed.value | value       | Use fixed value given as a parameter |
+| eval        | formula     | Apply formula t ovalue (referring to value as `x` or dereffing to data as `data`. Example formulas: `"x + x"` or `"x + data$Balance"`  or `"Balance + Charges"`|
 
 ## Examples
 
