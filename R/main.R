@@ -11,6 +11,7 @@
 #' @param seed seed value for random generation and sampling
 #' @param skip.headlines number of lines in a file before data starts
 #' @param skip.taillines number of lines before end of a file where data ends
+#' @param data.header flag that data starts with header
 #' @param chunksize specifies if file should be read and processed by portions,
 #'   portion denotes number of lines
 processFiles <- function(
@@ -21,6 +22,7 @@ processFiles <- function(
   seed = 0,
   skip.headlines = 0,
   skip.taillines = 0,
+  data.header = T,
   chunksize = 0
 ) {
   # log start
@@ -30,7 +32,11 @@ processFiles <- function(
     "-file.names:", file.names,
     "-output.folder:", output.folder,
     "-rules.file:", rules.file,
-    "-seed:", seed
+    "-seed:", seed,
+    "-skip.headlines:", skip.headlines,
+    "-skip.taillines:", skip.taillines,
+    "-data.header:", data.header,
+    "-chunksize:", chunksize
   )
 
   # rules
@@ -55,7 +61,7 @@ processFiles <- function(
         file.in,
         ifelse(folder.out == input.folder, ".scrambled", "")
       )
-      processFile(fin, fout, seed, rules, skip.headlines, skip.taillines, chunksize)
+      processFile(fin, fout, seed, rules, skip.headlines, skip.taillines, data.header, chunksize)
     }
   }
 
@@ -66,12 +72,12 @@ processFiles <- function(
 processFile <- function(
   file.in, file.out,
   seed, rules,
-  skip.headlines, skip.taillines, chunksize = 0
+  skip.headlines, skip.taillines, data.header = T, chunksize = 0
 ) {
   write.log("processing original file", file.in)
   # count lines in file
   file.lines <- countFileLines(file.in)
-  data.lines <- file.lines - skip.headlines - skip.taillines - 1
+  data.lines <- file.lines - skip.headlines - data.header - skip.taillines
   # take rules related to file
   filteredRules <- if (nrow(rules) == 0) rules else {
     subset(
@@ -85,7 +91,11 @@ processFile <- function(
   # ----------------------------------------------------------------------------
   # process HEADER
   # always load header because we take table column names as they are
-  header <- loadLines(file = file.in, start.line = 1, skip.headlines + 1)
+  header <- loadLines(
+    file = file.in,
+    start.line = 1,
+    skip.headlines + as.integer(data.header)
+  )
   createFile(file = file.out)
   saveLines(lines = header, file = file.out, append = T)
   # ----------------------------------------------------------------------------
@@ -100,24 +110,29 @@ processFile <- function(
     }
     scdata
   }
-  if (chunksize == 0) {
-    data <- if (data.lines > 0) {
-      loadData(file = file.in, skip.lines = skip.headlines, read.lines = data.lines)
+
+  if (data.lines == 0) {
+    NULL
+  } else if (chunksize == 0) {
+    data <- loadData(
+      file = file.in,
+      skip.lines = skip.headlines,
+      max.lines = data.lines,
+      header = data.header)
+    scdata <- processData(data)
+    saveData(data = scdata, file = file.out)
+  } else {
+    chunks <- (data.lines %/% chunksize) + if (data.lines %% chunksize > 0) 1 else 0
+    for (chunk in 1:chunks) {
+      data <- loadData(
+        file = file.in,
+        skip.lines = skip.headlines,
+        max.lines = data.lines,
+        header = data.header,
+        chunk.no = chunk,
+        chunk.size = chunksize)
       scdata <- processData(data)
       saveData(data = scdata, file = file.out)
-    }
-  } else {
-    data <- if (data.lines == 0) {
-      NULL
-    } else {
-      callbackfun <- function(data, pos) {
-        saveData(data = processData(data), file = file.out)
-      }
-      readr::read_csv_chunked(
-        file = file.in,
-        callback = readr::SideEffectChunkCallback$new(callbackfun),
-        chunk_size = chunksize, col_types = readr::cols(.default = "c")
-      )
     }
   }
   # ----------------------------------------------------------------------------

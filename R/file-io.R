@@ -104,13 +104,40 @@ saveLines <- function(lines, file, append) {
 }
 
 # load tabular data from file and return it as data.frame
-loadData <- function(file, skip.lines, read.lines) {
-  df <- read.csv(
-    file = file, header = T, sep = ";", quote = "\"", dec = ",",
-    nrows = read.lines, skip = skip.lines,
-    colClasses = "character",
-    stringsAsFactors = F, encoding = "WINDOWS-1252"
+loadData <- function(
+  file, skip.lines, max.lines,
+  header = c(TRUE, FALSE),
+  chunk.no = NULL, chunk.size = NULL
+) {
+  csv_header <- read.csv(
+    file = file, header = header, sep = ";", quote = "\"", dec = ",",
+    nrows = 1, skip = skip.lines
   )
+  csv_header_names <- names(csv_header)
+
+  skip_lines <-
+    if (!is.null(page) & !is.null(chunk.size)) {
+      (chunk.no - 1) * chunk.size + skip.lines + header
+    } else {
+      skip.lines + header
+    }
+  read_lines <-
+    if (skip_lines > max.lines) 0
+    else if (is.null(chunk.size)) max.lines
+    else if (skip_lines + chunk.size > max.lines) {max.lines - skip_lines}
+    else chunk.size
+  df <-
+    if (read_lines == 0) {
+      subset(csv_header, FALSE)
+    } else {
+      read.csv(
+        file = file, header = F, sep = ";", quote = "\"", dec = ",",
+        nrows = read_lines, skip = skip_lines, col.names = csv_header_names,
+        colClasses = "character",
+        stringsAsFactors = F, encoding = "WINDOWS-1252"
+      )
+    }
+
   return(df)
 }
 

@@ -37,20 +37,32 @@ You can process files using `processFiles` function. Function picks files from `
 
 ```R
 scrambler::processFiles(
-  input.folder = "./data/in/", file.names = "F_A12054_*", output.folder = "./data/out/", 
-  rules.file = "./data/rules/A12054-rules.csv", seed = 1000, skip.headlines = 1, skip.taillines = 1
+  input.folder = "./data/in/", file.names = "F_A12054_*",
+  output.folder = "./data/out/",
+  rules.file = "./data/rules/A12054-rules.csv",
+  seed = 1000, skip.headlines = 1, skip.taillines = 1,
+  data.header = TRUE
 )
 ```
+
 You can scramble dataframe by using `scrambleDataFrame` by specifying input data frame, rules data frame, seed value
 
 ```R
-scrambler::scrambleDataFrame(data = mydata, seed = 123, scrambling.rules = myrules)
+scrambler::scrambleDataFrame(
+  data = mydata,
+  seed = 123,
+  scrambling.rules = myrules
+)
 ```
 
 You can scramble vector of values by using `scrambleValue` function and specifying input values, scrambling method, seed
 
 ```R
-scrambler::scrambleValue(value = myvector, method = "hash", seed = 112)
+scrambler::scrambleValue(
+  value = myvector,
+  method = "hash",
+  seed = 112
+)
 ```
 
 ## Rules
@@ -81,7 +93,7 @@ List of supported methods and their parameters
 | hash        | algo        | Digest value according to `algo` parameter of digest function of [`digest`](https://cran.r-project.org/package=digest) package. Keep empty values empty. |
 | random.hash | algo        | _Not yet implemented_ |
 | random.num  |             | Generate random numbers using mean value and standard deviation of numbers provided. Keep empty and zero values. |
-| rnorm.num   |             | Generate random numbers with maen = 0 and standard deviation of given values; add generated values to given values. Keep empty and zero values. |
+| rnorm.num   |             | Generate random numbers with mean = 0 and standard deviation of given values; add generated values to given values. Keep empty and zero values. |
 | fixed.value | value       | Use fixed value given as a parameter |
 | eval        | formula     | Apply formula t ovalue (referring to value as `x` or dereffing to data as `data`. Example formulas: `"x + x"` or `"x + data$Balance"`  or `"Balance + Charges"`|
 
@@ -113,11 +125,11 @@ input.data <- data.frame(
 )
 # define rules for Name and Balance
 rules <- data.frame(
-  File = c(NA, NA), 
-  Column = c("Name", "Balance"), 
-  Method = c("hash", "random.num"), 
-  Method.Param = c("md5", NA), 
-  Max.Length = c(NA, NA), 
+  File = c(NA, NA),
+  Column = c("Name", "Balance"),
+  Method = c("hash", "random.num"),
+  Method.Param = c("md5", NA),
+  Max.Length = c(NA, NA),
   stringsAsFactors = F
 )
 # scramble data
@@ -138,21 +150,21 @@ folders <- c("./demo", "./demo/in", "./demo/out")
 for (folder in folders) if (!dir.exists(folder)) dir.create(folder)
 # generate some input data
 input.data <- data.frame(
-  Name = c("John", "Mike", "Alice"), 
-  Balance = c(10, 12, 100), 
+  Name = c("John", "Mike", "Alice"),
+  Balance = c(10, 12, 100),
   Country = c("US", "GB", "SG")
 )
 write.table(
-  x = input.data, file = "./demo/in/ACCOUNTS_20180430.dat", 
+  x = input.data, file = "./demo/in/ACCOUNTS_20180430.dat",
   sep = ";", dec = ",", append = F, row.names = F
 )
 # define rules for Name and Balance
 rules <- data.frame(
-  File = c("ACCOUNTS_\\d{8}\\.dat", "ACCOUNTS_\\d{8}\\.dat"), 
-  Column = c("Name", "Balance"), 
-  Method = c("hash", "random.num"), 
-  Method.Param = c("md5", NA), 
-  Max.Length = c(NA, NA), 
+  File = c("ACCOUNTS_\\d{8}\\.dat", "ACCOUNTS_\\d{8}\\.dat"),
+  Column = c("Name", "Balance"),
+  Method = c("hash", "random.num"),
+  Method.Param = c("md5", NA),
+  Max.Length = c(NA, NA),
   stringsAsFactors = F
 )
 write.csv(
@@ -170,6 +182,6 @@ For huge files there is an option to process them in portions (chunks), size can
 ```R
 scrambler::processFiles(
   input.folder = "./demo/in/", file.names = "ACCOUNTS_.*", output.folder = "./demo/out/",
-  rules.file = "./demo/rules.csv", seed = 100, chunksize = 100000
+  rules.file = "./demo/rules.csv", seed = 100, chunksize = 1000000
 )
 ```

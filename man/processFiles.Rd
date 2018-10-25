@@ -6,7 +6,8 @@
 \usage{
 processFiles(input.folder = ".", file.names = "*",
   output.folder = "", rules.file = "", seed = 0,
-  skip.headlines = 0, skip.taillines = 0, chunksize = 0)
+  skip.headlines = 0, skip.taillines = 0, data.header = T,
+  chunksize = 0)
 }
 \arguments{
 \item{input.folder}{input folder, word directory by default}
@@ -23,6 +24,8 @@ specified}
 \item{skip.headlines}{number of lines in a file before data starts}
 
 \item{skip.taillines}{number of lines before end of a file where data ends}
+
+\item{data.header}{flag that data starts with header}
 
 \item{chunksize}{specifies if file should be read and processed by portions,
 portion denotes number of lines}
