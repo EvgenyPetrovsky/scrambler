@@ -4,7 +4,8 @@
 \alias{scrambleValue}
 \title{Scramble values}
 \usage{
-scrambleValue(value, method, seed = 100, method.param = "", max.len)
+scrambleValue(value, method, seed = 100, method.param = "", max.len,
+  data = NULL)
 }
 \arguments{
 \item{value}{- vector of values to scramble}
@@ -14,9 +15,15 @@ scrambleValue(value, method, seed = 100, method.param = "", max.len)
 
 \item{seed}{- seed value for random generation and sampling}
 
-\item{method.param}{- additional information associated with method; for example hash algorithm or exact fixed value}
+\item{method.param}{- additional information associated with method; for
+example hash algorithm or exact fixed value}
 
-\item{max.len}{- maximum length of scrabled value (useful when data column is of limited length)}
+\item{max.len}{- maximum length of scrabled value (useful when data column is
+of limited length)}
+
+\item{data}{- data frame optionaly provided for evaluation (method = eval);
+columns of data frame can be addressed directly or via \code{data} alias
+(like \code{data$Field} to get data from \code{Field})}
 }
 \description{
 The function scrambles vector or values based on method provided

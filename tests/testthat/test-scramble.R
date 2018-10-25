@@ -80,11 +80,50 @@ test_that("scramble data.frame", {
     stringsAsFactors = F,
     Column = c("Client", "Account"),
     Method = c("hash", "hash"),
-    Fixed.Value = c("", ""),
+    Method.Param = c("sha1", "sha256"),
     Max.Length  = c("", "16")
   )
   sd <- scrambleDataFrame(df, scrambling.rules = sr)
   expect_true(TRUE)
+})
+
+test_that("scramble data frame using eval method", {
+  df <- data.frame(
+    stringsAsFactors = F,
+    Client  = c("Client 1", "Client 2", "Client 3"),
+    Account = c("Account 1", "Account 2", "Account 3"),
+    Balance = c(100, 200, 300)
+  )
+  sr <- data.frame(
+    stringsAsFactors = F,
+    Column = c("Balance"),
+    Method = c("eval"),
+    Method.Param  = "(x + 1333) / 1344 + Balance",
+    Max.Length  = c(NA)
+  )
+  sd <- scrambleDataFrame(df, scrambling.rules = sr)
+  expect_equal((df$Balance + 1333) / 1344 + df$Balance, sd$Balance)
+})
+
+test_that("scramble using eval method: access by \"x\"",{
+  data <- data.frame(
+    stringsAsFactors = F,
+    Balance = c(100, 200, 300),
+    Charges = c(1, 7, 3)
+  )
+  fun <- function(x, formula) {
+    scrambleValue(
+      value = x, method = "eval", seed = 123,
+      method.param = formula, max.len = NA, data = data
+    )
+  }
+  x <- data$Balance
+
+  expect_equal(fun(x, "x + x"            ), x + x)
+  expect_equal(fun(x, "x + data$Balance" ), x + data$Balance)
+  expect_equal(fun(x, "x + data[[1]]"    ), x + data[[1]])
+  expect_equal(fun(x, "Balance + Charges"), data$Balance + data$Charges)
+
 })
 
 save_testfile <- function(lines, filename) {
