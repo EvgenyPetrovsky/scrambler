@@ -19,7 +19,7 @@ scrambleDataFrame <- function(data, seed = 100, scrambling.rules) {
 
     write.log("scrambling", col, "using", method, "method")
     scr <- data
-    scr[, c(col)] <- scrambleValue(data[, col], method, seed, mparam, max.len)
+    scr[, c(col)] <- scrambleValue(data[, col], method, seed, mparam, max.len, data)
 
     return(scr)
   }
@@ -39,9 +39,14 @@ scrambleDataFrame <- function(data, seed = 100, scrambling.rules) {
 #' @param method - obfuscation bethod. Supported methods are \code{shuffle},
 #'   \code{hash}, \code{random.hash}, \code{random.num}, \code{rnorm.num}
 #' @param seed - seed value for random generation and sampling
-#' @param method.param - additional information associated with method; for example hash algorithm or exact fixed value
-#' @param max.len - maximum length of scrabled value (useful when data column is of limited length)
-scrambleValue <- function(value, method, seed = 100, method.param = "", max.len) {
+#' @param method.param - additional information associated with method; for
+#'   example hash algorithm or exact fixed value
+#' @param max.len - maximum length of scrabled value (useful when data column is
+#'   of limited length)
+#' @param data - data frame optionaly provided for evaluation (method = eval);
+#'   columns of data frame can be addressed directly or via \code{data} alias
+#'   (like \code{data$Field} to get data from \code{Field})
+scrambleValue <- function(value, method, seed = 100, method.param = "", max.len, data = NULL) {
   set.seed(seed)
   result <- if (method == "shuffle") {
     shuffle(value)
@@ -57,6 +62,8 @@ scrambleValue <- function(value, method, seed = 100, method.param = "", max.len)
     random.date(value)
   } else if (method == "fixed.value") {
     fixed.value(value, method.param)
+  } else if (method == "eval") {
+    eval.formula(value, method.param, data)
   } else {
     fixed.value(value, method.param)
   }
@@ -107,4 +114,12 @@ random.hash <- function(method.param) {
 
 fixed.value <- function(v, fix.value) {
   replicate(length(v), fix.value)
+}
+
+eval.formula <- function(x, formula, data) {
+  result <- with(
+    data,
+    eval(parse(text = formula))
+  )
+  result
 }
