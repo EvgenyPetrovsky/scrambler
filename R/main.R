@@ -35,7 +35,7 @@ processFiles <- function(
 
   # rules
   rules <- if (rules.file == "") {
-    scrambling.rules
+    scrambler::scrambling.rules
   } else {
     loadRules(rules.file)
   }
