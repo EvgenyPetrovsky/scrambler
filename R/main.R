@@ -77,7 +77,7 @@ processFile <- function(
   write.log("processing original file", file.in)
   # count lines in file
   file.lines <- countFileLines(file.in)
-  data.lines <- file.lines - skip.headlines - data.header - skip.taillines
+  data.lines <- file.lines - skip.headlines - as.integer(data.header) - skip.taillines
   # take rules related to file
   filteredRules <- if (nrow(rules) == 0) rules else {
     subset(

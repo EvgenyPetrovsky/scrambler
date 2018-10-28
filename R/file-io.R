@@ -115,16 +115,13 @@ loadData <- function(
   )
   csv_header_names <- names(csv_header)
 
-  skip_lines <-
-    if (!is.null(page) & !is.null(chunk.size)) {
-      (chunk.no - 1) * chunk.size + skip.lines + header
-    } else {
-      skip.lines + header
-    }
+  chunk_offset <-
+    if (!is.null(page) & !is.null(chunk.size)) (chunk.no - 1) * chunk.size
+    else 0
   read_lines <-
-    if (skip_lines > max.lines) 0
+    if (chunk_offset > max.lines) 0
     else if (is.null(chunk.size)) max.lines
-    else if (skip_lines + chunk.size > max.lines) {max.lines - skip_lines}
+    else if (chunk_offset + chunk.size > max.lines) {max.lines - chunk_offset}
     else chunk.size
   df <-
     if (read_lines == 0) {
@@ -132,8 +129,9 @@ loadData <- function(
     } else {
       read.csv(
         file = file, header = F, sep = ";", quote = "\"", dec = ",",
-        nrows = read_lines, skip = skip_lines, col.names = csv_header_names,
-        colClasses = "character",
+        nrows = read_lines,
+        skip = chunk_offset + skip.lines + header,
+        col.names = csv_header_names, colClasses = "character",
         stringsAsFactors = F, encoding = "WINDOWS-1252"
       )
     }
